@@ -5,33 +5,33 @@ from googletrans import Translator
 from indic_transliteration import sanscript
 from indic_transliteration.sanscript import transliterate as hindi_transliterate
 from random import shuffle
+from flask import Flask, request, render_template
 
-translator = Translator()
-english_input = input("Enter your input english text:\n")
-mode = input("Encryption or decryption?: ")
+app = Flask(__name__)
 
-languages = {
-    "hi": 1,
-    "et": 2,
-    "fr": 3,
-    "de": 4,
-    "no": 5,
-    "gd": 6
-}
-word_list = english_input.split()
-word_count = len(word_list)
-language_keys = list(languages.keys())
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    result = ""
+    if request.method == 'POST':
+        user_input = request.form['text']
+        mode = request.form['mode']        # encryption or decryption
+        message_id = request.form.get('msg_id', None)  # only needed for decryption; use `.get()` so it's not required for encryption
+        result = useTool(user_input, mode, message_id)
+    return render_template('index.html', result=result)
 
-def makeMessageID ():
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
+
+def makeMessageID (language_keys, languages):
     message_id = []
     for language in language_keys:
         message_id.append(languages[language])
-    print ("Your message ID is: ", *message_id, sep="")
+    output = "".join(str(m) for m in message_id)
+    return "Your message ID is: " + output
 
-def makeLanguageKeys ():
+def makeLanguageKeys (languages, id):
     language_keys = []
-    input_id = str(input("Please provide a message ID: "))
-    print("\n")
+    input_id = id
     message_id = list(input_id)
     for number in message_id:
         for key, value in languages.items():
@@ -41,7 +41,7 @@ def makeLanguageKeys ():
     
     return language_keys
 
-def encryptMessage ():
+def encryptMessage (language_keys, word_list, translator, languages):
     result = ""
     index = 0
 
@@ -56,11 +56,11 @@ def encryptMessage ():
             translated_text = hindi_transliterate(translated_text, sanscript.DEVANAGARI, sanscript.ITRANS)
         
         result += " " + translated_text
+    output = result[0].upper(), result[1:]
+    makeMessageID(language_keys, languages)
+    return "Here's the encrypted message:\n" + output
 
-    print("Here's the encrypted message:\n", result[0].upper(), result[1:])
-    makeMessageID()
-
-def decryptMessage (language_keys):
+def decryptMessage (language_keys, word_list, translator):
     result = ""
     index = 0
 
@@ -74,20 +74,34 @@ def decryptMessage (language_keys):
         
         result += " " + translated_text
 
-    print("Here's the decrypted message:\n", result[0].upper(), result[1:].lower())
-    makeMessageID()
+    output = result[0].upper(), result[1:].lower()
+    return "Here's the decrypted message:\n" + output
+
+def useTool(user_input, mode, message_id):
+    translator = Translator()
+    english_input = user_input
+
+    languages = {
+        "hi": 1,
+        "et": 2,
+        "fr": 3,
+        "de": 4,
+        "no": 5,
+        "gd": 6
+    }
+    word_list = english_input.split()
+    language_keys = list(languages.keys())
     
+    if (mode.lower() == "encryption"):
+        shuffle(language_keys)
+        return encryptMessage(language_keys, word_list, translator, languages)
 
-if (mode.lower() == "encryption"):
-    shuffle(language_keys)
-    encryptMessage()
+    elif (mode.lower() == "decryption"):
+        language_keys = makeLanguageKeys(languages, message_id)
+        return decryptMessage(language_keys, word_list, translator)
 
-elif (mode.lower() == "decryption"):
-    language_keys = makeLanguageKeys()
-    decryptMessage(language_keys)
-
-else:
-    print ("Invalid mode! Please check your spellings and try again: ")
+    else:
+        return "Invalid mode! Please check your spellings and try again: "
 
 # result = translator.translate(english_word, src='en', dest='hi')
 # hindi_text = result.text 
