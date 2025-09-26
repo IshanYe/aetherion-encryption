@@ -76,7 +76,6 @@ def useTool(user_input, mode, message_id):
         "fr": 3,
         "de": 4,
         "no": 5,
-        "gd": 6
     }
     word_list = english_input.split()
     language_keys = list(languages.keys())
