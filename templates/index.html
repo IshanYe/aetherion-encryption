@@ -1,0 +1,104 @@
+<style>
+@media (max-width: 800px) {
+  .container { flex-direction: column; }
+  .sidebar, .main { width: 100%; }
+}
+@font-face {
+  font-family: 'ishan';
+  src: url('/static/fonts/ishan.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+button:hover {
+  background: #34495e;
+  color: #fff;
+}
+.box:hover {
+  box-shadow: 0 6px 30px rgba(63,114,175,0.18);
+  border-color: #1565c0;
+}
+body {
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  font-family: Helvetica, Arial, sans-serif;
+}
+.row {
+  display:flex;
+}
+.box {
+  width: 350px;
+  padding: 24px;
+  margin: 40px auto;
+  background: #fff;
+  border: 2px solid #3f72af;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(63,114,175,0.12);
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #3f72af;
+  font-family: "ishan";
+}
+label {
+  display: block;
+  margin-top: 10px;
+  font-size: 15px;
+}
+input, select {
+  width: 97%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+  font-size: 16px;
+  margin-top: 8px;
+  background: linear-gradient(90deg, #f2f2f2, #dedede);
+}
+input[type=submit] {
+  cursor: pointer;
+  background: linear-gradient(90deg,#3f72af,#112d4e);
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  margin-top: 16px;
+}
+</style>
+<div class="box" style="margin: 20px auto; width: 1200px; height: 900px; display:flex; flex-direction: column; background: linear-gradient(0deg,#bfbfbf 0%, #f2f2f2 25%, #bfbfbf 50%, #f2f2f2 75%, #bfbfbf 100%)">
+  <div class="box" style="margin:20px 20px; width: 1116px; height: 35px; line-height: 0px">
+  <h1 style="text-align: center"> The one and only: Aetherion Message Encryption Machine! </h1>
+  </div>
+  <div class="row">
+  <div class="box" style="margin:20px 20px; width: 400px; height: 500px;">
+  <h1 style="text-align: center">Encryptor/Decryptor</h1>
+  <form method="post">
+    <label for="text">Enter message:</label>
+    <input id="text" name="text" type="text" required>
+    <label for="mode">Mode:</label>
+    <select id="mode" name="mode">
+      <option value="encryption">Encryption</option>
+      <option value="decryption">Decryption</option>
+    </select>
+    <label for="msg_id">Message ID (for decryption):</label>
+    <input id="msg_id" name="msg_id" type="text">
+    <input type="submit" value="Submit">
+  </form>
+  {% if result %}
+    <h4>Result:</h4>
+    <p>{{ result|safe }}</p>
+  {% endif %}
+  </div>
+  <div class="box" style="margin:20px 20px; width: 688px; height: 548px; padding: 0px;">
+  <h1 style="text-align: center">How to use</h1>
+    <div class="box" style="margin:auto auto; width: 575px; height: 170px; padding: 15px">
+    <h3> Encryption </h3>
+    <p> Enter your desired input message into the "Enter message" box, and select encryption as your mode. Once you get your output, you will also receive a message ID which is needed for decryption. Make sure to store that ID or else decryption is impossible! </p>
+    </div>
+    <div class="box" style="margin:20px auto; width: 575px; height: 170px; padding: 15px">
+    <h3> Decryption </h3>
+    <p> Enter your desired input message into the "Enter message" box, select decryption as your mode, and enter your message ID which you should've received when you first encrypted the message. It is not possible to decrypt without a message ID! </p>
+    </div>
+  </div>
+  </div>
+  <div class="box" style="margin: 20px 20px; width: 1100px; height: 100px">
+  <h2 style="color: blue"> How it works </h2>
+  <p> What? You really thought I'd make my encryption methods public? Damn. </p>
+  </div>
+   
+</div>
